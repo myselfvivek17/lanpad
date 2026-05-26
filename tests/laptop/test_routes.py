@@ -67,7 +67,8 @@ def test_media_volume(authed):
 
 def test_media_volume_invalid(authed):
     c, h = authed
-    r = c.post("/api/media/volume", json={"action": "loud"}, headers=h)
+    with patch("agents.laptop.routes_media.media_win.volume", side_effect=ValueError("unknown volume action: loud")):
+        r = c.post("/api/media/volume", json={"action": "loud"}, headers=h)
     assert r.status_code == 400
 
 

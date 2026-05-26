@@ -24,7 +24,10 @@ def attach(app: FastAPI) -> None:
 
     @r.post("/api/power/sleep")
     def sleep(_: dict = Depends(require_auth)):
-        power_win.sleep()
+        try:
+            power_win.sleep()
+        except RuntimeError as e:
+            raise HTTPException(status_code=500, detail=str(e))
         return {"ok": True}
 
     @r.post("/api/power/lock")
