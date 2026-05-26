@@ -40,7 +40,6 @@ def require_auth(token: str = Depends(_bearer_token)) -> dict:
 
 def build_app(*, agent_name: str, agent_kind: str, version: str) -> FastAPI:
     app = FastAPI(title=f"phone-remote {agent_kind}-agent", version=version)
-    app.add_middleware(LanOnlyMiddleware)
     app.add_middleware(
         CORSMiddleware,
         allow_origin_regex=_LAN_ORIGIN_REGEX,
@@ -48,6 +47,7 @@ def build_app(*, agent_name: str, agent_kind: str, version: str) -> FastAPI:
         allow_headers=["Authorization", "Content-Type"],
         allow_credentials=False,
     )
+    app.add_middleware(LanOnlyMiddleware)
 
     @app.exception_handler(auth.RateLimitedError)
     async def rate_limit_handler(_, exc: auth.RateLimitedError):
@@ -76,7 +76,7 @@ def build_app(*, agent_name: str, agent_kind: str, version: str) -> FastAPI:
     @router.get("/api/auth/devices")
     def list_devices(_: dict = Depends(require_auth)):
         return [
-            {"id": t["id"], "name": t["name"], "last_seen": t["last_seen"]}
+            {"id": t["id"], "name": t["name"], "last_seen": int(t["last_seen"])}
             for t in storage.list_tokens()
         ]
 
