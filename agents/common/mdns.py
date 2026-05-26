@@ -42,5 +42,9 @@ def advertise(hostname: str, port: int, agent_kind: str) -> AdvertiseHandle:
         server=f"{hostname}.local.",
     )
     zc = Zeroconf(ip_version=IPVersion.V4Only)
-    zc.register_service(info)
+    try:
+        zc.register_service(info)
+    except Exception:
+        zc.close()
+        raise
     return AdvertiseHandle(zeroconf=zc, info=info)

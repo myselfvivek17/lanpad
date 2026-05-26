@@ -18,4 +18,5 @@ def test_advertise_registers_service():
     assert b"kind" in info.properties or "kind" in {k.decode() if isinstance(k, bytes) else k for k in info.properties}
     # close releases zeroconf
     handle.close()
+    fake_zc.unregister_service.assert_called_once_with(info)
     fake_zc.close.assert_called_once()
