@@ -1,0 +1,13 @@
+:root {
+  --bg: #0b0d12;
+  --fg: #e7e9ee;
+  --muted: #7f8694;
+  --accent: #5b9dff;
+  --danger: #ff6b6b;
+  --card: #14171f;
+  font-family: system-ui, sans-serif;
+}
+* { box-sizing: border-box; }
+html, body, #root { height: 100%; margin: 0; background: var(--bg); color: var(--fg); }
+.screen { padding: 16px; min-height: 100%; }
+button { font: inherit; }

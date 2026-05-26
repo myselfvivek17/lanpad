@@ -6,4 +6,6 @@ venv/
 .ruff_cache/
 pwa/node_modules/
 pwa/dist/
+pwa/src/*.js
+pwa/*.tsbuildinfo
 *.egg-info/
