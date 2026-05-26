@@ -20,4 +20,5 @@ def lock() -> None:
 
 def sleep() -> None:
     # SetSuspendState(hibernate=0, forceCritical=1, disableWakeEvent=0)
-    ctypes.windll.powrprof.SetSuspendState(0, 1, 0)
+    if not ctypes.windll.powrprof.SetSuspendState(0, 1, 0):
+        raise RuntimeError("SetSuspendState failed")
