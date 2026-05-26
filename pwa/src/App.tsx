@@ -3,6 +3,9 @@ import Devices from "./pages/Devices";
 import Pair from "./pages/Pair";
 import Control from "./pages/Control";
 import Trackpad from "./pages/Trackpad";
+import Keyboard from "./pages/Keyboard";
+import Media from "./pages/Media";
+import Power from "./pages/Power";
 
 export default function App() {
   return (
@@ -11,9 +14,9 @@ export default function App() {
       <Route path="/pair" element={<Pair />} />
       <Route path="/control" element={<Control />} />
       <Route path="/trackpad" element={<Trackpad />} />
-      <Route path="/keyboard" element={<div className="screen">Keyboard TBD next task</div>} />
-      <Route path="/media" element={<div className="screen">Media TBD next task</div>} />
-      <Route path="/power" element={<div className="screen">Power TBD next task</div>} />
+      <Route path="/keyboard" element={<Keyboard />} />
+      <Route path="/media" element={<Media />} />
+      <Route path="/power" element={<Power />} />
     </Routes>
   );
 }
