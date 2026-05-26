@@ -3,7 +3,6 @@ from __future__ import annotations
 import subprocess
 import uuid
 from pathlib import Path
-from typing import Optional
 
 _LOG_DIR = Path("/var/log/server-agent")
 _SCRIPT = "/usr/local/bin/server-agent-update.sh"
