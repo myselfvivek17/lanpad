@@ -1,7 +1,19 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 export function ConfirmModal({ title, message, confirmLabel = "Confirm", onConfirm, onCancel }) {
-    return (_jsx("div", { style: {
-            position: "fixed", inset: 0, background: "rgba(0,0,0,0.6)",
-            display: "flex", alignItems: "center", justifyContent: "center", zIndex: 50,
-        }, children: _jsxs("div", { style: { background: "var(--card)", padding: 16, borderRadius: 10, minWidth: 260 }, children: [_jsx("h3", { style: { margin: "0 0 8px" }, children: title }), _jsx("p", { style: { color: "var(--muted)", margin: "0 0 16px" }, children: message }), _jsxs("div", { style: { display: "flex", gap: 8, justifyContent: "flex-end" }, children: [_jsx("button", { onClick: onCancel, children: "Cancel" }), _jsx("button", { onClick: onConfirm, style: { background: "var(--danger)", color: "white", border: 0, padding: "6px 12px", borderRadius: 6 }, children: confirmLabel })] })] }) }));
+    return (_jsx("div", { className: "modal-overlay", onClick: onCancel, children: _jsxs("div", { className: "modal-sheet", onClick: (e) => e.stopPropagation(), children: [_jsx("div", { className: "mono", style: { fontSize: 10, color: "var(--accent)", letterSpacing: "0.18em", textTransform: "uppercase", marginBottom: 10 }, children: "Confirm" }), _jsx("h2", { style: { fontSize: 20, fontWeight: 800, marginBottom: 8 }, children: title }), _jsx("p", { style: { color: "var(--muted)", fontSize: 15, lineHeight: 1.6, marginBottom: 24 }, children: message }), _jsxs("div", { style: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }, children: [_jsx("button", { onClick: onCancel, style: {
+                                padding: "15px",
+                                background: "var(--surface)",
+                                color: "var(--fg)",
+                                borderRadius: "var(--r)",
+                                border: "1px solid var(--border)",
+                                fontSize: 15,
+                            }, children: "Cancel" }), _jsx("button", { onClick: onConfirm, style: {
+                                padding: "15px",
+                                background: "var(--danger-dim)",
+                                color: "var(--danger)",
+                                borderRadius: "var(--r)",
+                                border: "1px solid rgba(255,68,85,0.3)",
+                                fontSize: 15,
+                                fontWeight: 700,
+                            }, children: confirmLabel })] })] }) }));
 }

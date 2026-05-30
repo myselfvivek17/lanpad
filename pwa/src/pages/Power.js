@@ -29,6 +29,20 @@ export default function Power() {
         }, 2000);
         return () => clearInterval(t);
     }, [updateJob, d]);
-    const btn = { padding: 14, background: "var(--card)", color: "var(--fg)", border: 0, borderRadius: 8, fontSize: 16 };
-    return (_jsxs("div", { className: "screen", children: [_jsx(Link, { to: "/control", children: "\u2190 Back" }), _jsx("h1", { children: "Power" }), d.kind === "laptop" && (_jsxs("div", { style: { display: "grid", gap: 8 }, children: [_jsx("button", { style: btn, onClick: () => ask("Shutdown laptop?", () => post("/api/power/shutdown", { delay_seconds: 5 })), children: "Shutdown" }), _jsx("button", { style: btn, onClick: () => post("/api/power/sleep"), children: "Sleep" }), _jsx("button", { style: btn, onClick: () => post("/api/power/lock"), children: "Lock" })] })), d.kind === "server" && (_jsxs("div", { style: { display: "grid", gap: 8 }, children: [_jsx("button", { style: btn, onClick: () => ask("Shutdown server?", () => post("/api/power/shutdown", { delay_seconds: 30 })), children: "Shutdown" }), _jsx("button", { style: btn, onClick: () => ask("Run apt update + upgrade?", startUpdate), children: "System update" }), updateJob && (_jsxs("div", { style: { background: "var(--card)", padding: 8, borderRadius: 8 }, children: [_jsxs("div", { children: ["Job ", updateJob.id, ": ", _jsx("b", { children: updateJob.status })] }), _jsx("pre", { style: { maxHeight: 200, overflow: "auto", whiteSpace: "pre-wrap", fontSize: 12 }, children: updateJob.log })] }))] })), confirm && (_jsx(ConfirmModal, { title: "Are you sure?", message: confirmLabel, confirmLabel: "Yes", onConfirm: confirm, onCancel: () => setConfirm(null) }))] }));
+    const statusColor = updateJob?.status === "completed" ? "var(--success)" :
+        updateJob?.status === "failed" ? "var(--danger)" :
+            "var(--accent)";
+    return (_jsxs("div", { className: "screen", children: [_jsx(Link, { to: "/control", className: "back", children: "\u2190 Back" }), _jsx("h1", { style: { marginBottom: 28, marginTop: 8 }, children: "Power" }), d.kind === "laptop" && (_jsxs("div", { style: { display: "flex", flexDirection: "column", gap: 10 }, children: [_jsx("button", { className: "btn-danger", onClick: () => ask("Shutdown laptop?", () => post("/api/power/shutdown", { delay_seconds: 5 })), children: "\u23FB\u2002Shutdown" }), _jsx("button", { className: "btn-card", onClick: () => post("/api/power/sleep"), children: "\uD83C\uDF19\u2002Sleep" }), _jsx("button", { className: "btn-card", onClick: () => post("/api/power/lock"), children: "\uD83D\uDD12\u2002Lock" })] })), d.kind === "server" && (_jsxs("div", { style: { display: "flex", flexDirection: "column", gap: 10 }, children: [_jsx("button", { className: "btn-danger", onClick: () => ask("Shutdown server?", () => post("/api/power/shutdown", { delay_seconds: 30 })), children: "\u23FB\u2002Shutdown" }), _jsx("button", { className: "btn-card", onClick: () => ask("Run apt update + upgrade?", startUpdate), children: "\u21BB\u2002System Update" }), updateJob && (_jsxs("div", { className: "card", style: { marginTop: 4 }, children: [_jsxs("div", { style: { display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }, children: [_jsx("span", { className: "status-dot", style: {
+                                            background: statusColor,
+                                            boxShadow: `0 0 8px ${statusColor}`,
+                                            animation: updateJob.status === "running" ? "pulse 1.4s ease infinite" : "none",
+                                        } }), _jsx("span", { className: "mono", style: { fontSize: 11, color: statusColor, letterSpacing: "0.1em" }, children: updateJob.status })] }), _jsx("pre", { style: {
+                                    maxHeight: 180,
+                                    overflow: "auto",
+                                    whiteSpace: "pre-wrap",
+                                    fontSize: 11,
+                                    fontFamily: "'Space Mono', monospace",
+                                    color: "var(--muted)",
+                                    lineHeight: 1.7,
+                                }, children: updateJob.log })] }))] })), confirm && (_jsx(ConfirmModal, { title: "Confirm action", message: confirmLabel, confirmLabel: "Yes, proceed", onConfirm: confirm, onCancel: () => setConfirm(null) }))] }));
 }

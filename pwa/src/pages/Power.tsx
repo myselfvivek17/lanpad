@@ -34,36 +34,84 @@ export default function Power() {
     return () => clearInterval(t);
   }, [updateJob, d]);
 
-  const btn = { padding: 14, background: "var(--card)", color: "var(--fg)", border: 0, borderRadius: 8, fontSize: 16 };
+  const statusColor =
+    updateJob?.status === "completed" ? "var(--success)" :
+    updateJob?.status === "failed"    ? "var(--danger)"  :
+    "var(--accent)";
 
   return (
     <div className="screen">
-      <Link to="/control">← Back</Link>
-      <h1>Power</h1>
+      <Link to="/control" className="back">← Back</Link>
+      <h1 style={{ marginBottom: 28, marginTop: 8 }}>Power</h1>
+
       {d.kind === "laptop" && (
-        <div style={{ display: "grid", gap: 8 }}>
-          <button style={btn} onClick={() => ask("Shutdown laptop?", () => post("/api/power/shutdown", { delay_seconds: 5 }))}>Shutdown</button>
-          <button style={btn} onClick={() => post("/api/power/sleep")}>Sleep</button>
-          <button style={btn} onClick={() => post("/api/power/lock")}>Lock</button>
+        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+          <button
+            className="btn-danger"
+            onClick={() => ask("Shutdown laptop?", () => post("/api/power/shutdown", { delay_seconds: 5 }))}
+          >
+            ⏻&ensp;Shutdown
+          </button>
+          <button className="btn-card" onClick={() => post("/api/power/sleep")}>
+            🌙&ensp;Sleep
+          </button>
+          <button className="btn-card" onClick={() => post("/api/power/lock")}>
+            🔒&ensp;Lock
+          </button>
         </div>
       )}
+
       {d.kind === "server" && (
-        <div style={{ display: "grid", gap: 8 }}>
-          <button style={btn} onClick={() => ask("Shutdown server?", () => post("/api/power/shutdown", { delay_seconds: 30 }))}>Shutdown</button>
-          <button style={btn} onClick={() => ask("Run apt update + upgrade?", startUpdate)}>System update</button>
+        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+          <button
+            className="btn-danger"
+            onClick={() => ask("Shutdown server?", () => post("/api/power/shutdown", { delay_seconds: 30 }))}
+          >
+            ⏻&ensp;Shutdown
+          </button>
+          <button
+            className="btn-card"
+            onClick={() => ask("Run apt update + upgrade?", startUpdate)}
+          >
+            ↻&ensp;System Update
+          </button>
+
           {updateJob && (
-            <div style={{ background: "var(--card)", padding: 8, borderRadius: 8 }}>
-              <div>Job {updateJob.id}: <b>{updateJob.status}</b></div>
-              <pre style={{ maxHeight: 200, overflow: "auto", whiteSpace: "pre-wrap", fontSize: 12 }}>{updateJob.log}</pre>
+            <div className="card" style={{ marginTop: 4 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
+                <span
+                  className="status-dot"
+                  style={{
+                    background: statusColor,
+                    boxShadow: `0 0 8px ${statusColor}`,
+                    animation: updateJob.status === "running" ? "pulse 1.4s ease infinite" : "none",
+                  }}
+                />
+                <span className="mono" style={{ fontSize: 11, color: statusColor, letterSpacing: "0.1em" }}>
+                  {updateJob.status}
+                </span>
+              </div>
+              <pre style={{
+                maxHeight: 180,
+                overflow: "auto",
+                whiteSpace: "pre-wrap",
+                fontSize: 11,
+                fontFamily: "'Space Mono', monospace",
+                color: "var(--muted)",
+                lineHeight: 1.7,
+              }}>
+                {updateJob.log}
+              </pre>
             </div>
           )}
         </div>
       )}
+
       {confirm && (
         <ConfirmModal
-          title="Are you sure?"
+          title="Confirm action"
           message={confirmLabel}
-          confirmLabel="Yes"
+          confirmLabel="Yes, proceed"
           onConfirm={confirm}
           onCancel={() => setConfirm(null)}
         />

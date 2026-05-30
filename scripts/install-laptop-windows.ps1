@@ -22,7 +22,7 @@ New-NetFirewallRule -DisplayName "phone-remote-agent" -Direction Inbound `
 
 # Task Scheduler entry — runs at logon, restarts on failure
 $action = New-ScheduledTaskAction `
-    -Execute "$venv\Scripts\pythonw.exe" `
+    -Execute "$venv\Scripts\python.exe" `
     -Argument "-m agents.laptop.main" `
     -WorkingDirectory $root
 $trigger = New-ScheduledTaskTrigger -AtLogOn
