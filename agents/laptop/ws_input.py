@@ -22,7 +22,7 @@ def attach(app: FastAPI) -> None:
                     if t == "move":
                         input_win.move_rel(float(frame["dx"]), float(frame["dy"]))
                     elif t == "scroll":
-                        input_win.scroll(int(frame["dx"]), int(frame["dy"]))
+                        input_win.scroll(float(frame["dx"]), float(frame["dy"]))
                     elif t == "down":
                         input_win.mouse_down(str(frame["btn"]))
                     elif t == "up":

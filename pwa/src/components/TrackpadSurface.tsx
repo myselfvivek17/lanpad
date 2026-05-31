@@ -25,10 +25,14 @@ type PointerState = {
   movedBeyondTap: boolean;
 };
 
+// ms to suppress single-finger move after second finger lifts
+const SCROLL_COOLDOWN_MS = 150;
+
 export function TrackpadSurface({ device, sensitivity, onStatus, onAuthFail }: Props) {
   const ref = useRef<HTMLDivElement>(null);
   const ws = useRef<WsClient | null>(null);
   const pointers = useRef<Map<number, PointerState>>(new Map());
+  const scrollEndedAt = useRef<number>(0);
 
   useEffect(() => {
     const c = new WsClient(device);
@@ -77,8 +81,8 @@ export function TrackpadSurface({ device, sensitivity, onStatus, onAuthFail }: P
       p.movedBeyondTap = true;
     }
     if (pointers.current.size === 2) {
-      ws.current?.sendScroll(0, Math.round(-dy));
-    } else {
+      ws.current?.sendScroll(0, -dy);  // raw pixels — backend accumulates
+    } else if (performance.now() - scrollEndedAt.current > SCROLL_COOLDOWN_MS) {
       ws.current?.sendMove(dx, dy);
     }
   }
@@ -94,7 +98,9 @@ export function TrackpadSurface({ device, sensitivity, onStatus, onAuthFail }: P
         body: JSON.stringify({ button: "left", double: false }),
       }).catch(() => {});
     }
+    const wasScrolling = pointers.current.size === 2;
     pointers.current.delete(e.pointerId);
+    if (wasScrolling) scrollEndedAt.current = performance.now();
   }
 
   return (
